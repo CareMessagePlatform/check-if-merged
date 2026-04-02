@@ -1,12 +1,9 @@
-version: 2
+version: 2.1
 jobs:
   prepare:
     working_directory: ~/repo
     docker:
-      - image: cimg/node:17.3.1
-        auth:
-          username: caremessagehub
-          password: $DOCKERHUB_PASSWORD
+      - image: cimg/node:20.18
     steps:
       - checkout
 
@@ -24,10 +21,7 @@ jobs:
   setup_and_test:
     working_directory: ~/repo
     docker:
-      - image: cimg/node:17.3.1
-        auth:
-          username: caremessagehub
-          password: $DOCKERHUB_PASSWORD
+      - image: cimg/node:20.18
         environment:
           COVERAGE: true
     steps:
@@ -41,14 +35,9 @@ jobs:
           command: yarn test
 
 workflows:
-  version: 2
   prepare_setup_and_test:
     jobs:
-      - prepare:
-          context:
-            - docker-credential
+      - prepare
       - setup_and_test:
-          context:
-            - docker-credential
           requires:
             - prepare
